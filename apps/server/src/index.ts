@@ -1,13 +1,42 @@
-import express from "express";
+import express from 'express'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+import { UserManager } from './User/User.js';
 
-const PORT = 3001
+// Initialize Express app
 const app = express();
-
-
-app.get('/', (req, res) => {
-    res.send("Hello from the server")
+const server = createServer(app)
+const PORT = process.env.PORT || 3000;
+const io = new Server(server, {
+    cors:{
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
 })
 
-app.listen(PORT, () => {
-    console.log(`Server is listening on PORT ${PORT}`)
+const userManager = new UserManager();
+// Handle WebSocket connection
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on("connect" , () =>{
+    console.log("Adding user to user list")
+    userManager.addUser(socket)
+  })
+
+  //Handle initiate pairing
+  socket.on('initiate-pairing', () => {
+    userManager.initiatePairing(socket)
+  })
+
+  // Handle disconnects
+  socket.on('disconnect', () => {
+    console.log("Removing user from user list")
+    userManager.removeUser(socket)
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
+
+server.listen(PORT, () => {
+    console.log("Server running on port " + PORT)
 })
