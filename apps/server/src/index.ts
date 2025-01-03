@@ -17,12 +17,7 @@ const io = new Server(server, {
 const userManager = new UserManager();
 // Handle WebSocket connection
 io.on('connection', (socket) => {
-  console.log(`User connected: ${socket.id}`);
-
-  socket.on("connect" , () =>{
-    console.log("Adding user to user list")
-    userManager.addUser(socket)
-  })
+  userManager.addUser(socket)
 
   //Handle initiate pairing
   socket.on('initiate-pairing', () => {
@@ -31,9 +26,7 @@ io.on('connection', (socket) => {
 
   // Handle disconnects
   socket.on('disconnect', () => {
-    console.log("Removing user from user list")
     userManager.removeUser(socket)
-    console.log(`User disconnected: ${socket.id}`);
   });
 });
 
