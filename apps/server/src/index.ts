@@ -24,6 +24,26 @@ io.on('connection', (socket) => {
     userManager.initiatePairing(socket)
   })
 
+  //Getting offer from one party
+  socket.on('offer', ({to , offer}) => {
+    io.to(to).emit('accept-offer', {from : socket.id , offer : offer})
+  })
+
+  //Getting answer from other party
+  socket.on('offer-accepted', ({to , answer}) => {
+     io.to(to).emit('accept-answer' , {from : socket.id , answer})
+  })
+
+
+  //Negotiation offer from one user
+  socket.on('negotiation-needed', ({to , offer}) => {
+    io.to(to).emit('accept-negotiation' , ({from : socket.id , offer}))
+  })
+
+  socket.on('negotiation-accepted' , ({to , answer}) => {
+    io.to(to).emit('negotiation-answer-accepted' , ({answer}))
+  })
+
   // Handle disconnects
   socket.on('disconnect', () => {
     userManager.removeUser(socket)

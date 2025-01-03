@@ -1,27 +1,9 @@
 import { User } from "../User/User.js";
 
-export interface Room{
-    user1 : User
-    user2 : User
-}
-
 export class RoomManager{
-    private rooms : Map<string, Room>;
-
-    constructor(){
-        this.rooms = new Map<string,Room>();
-    }
-    
     addUsersToRoom(user1 : User[] , user2 : User[]){
         const roomId = this.generateRoomId(5);
-
-        this.rooms.set(roomId,{
-            //@ts-ignore
-            user1 : user1[0],
-
-            //@ts-ignore
-            user2 : user2[0]
-        });
+        user1[0]?.socket.emit('create-offer', {to : user2[0]?.socket.id})
         return roomId
     }
 

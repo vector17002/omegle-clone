@@ -55,8 +55,8 @@ export class UserManager{
             return;
 
         const room = this.roomManager.addUsersToRoom(user1 , user2);
-        user1[0]?.socket.emit('send-to-room', {room});
-        user2[0]?.socket.emit('send-to-room', {room})
+        user1[0]?.socket.emit('send-to-room', {room : room});
+        user2[0]?.socket.emit('send-to-room', {room : room})
     }
 
 }

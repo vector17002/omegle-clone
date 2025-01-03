@@ -1,4 +1,4 @@
-import {  useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { io } from "socket.io-client"
 import Loading from "./Loading"
@@ -27,8 +27,8 @@ function App() {
     handleStream()
     socket.on('send-to-room', ({room}) => {
       setLoading(false)
-      setStream(null)
       navigate(`/${room}`)
+      setStream(null)
     })
 
     return () =>{
